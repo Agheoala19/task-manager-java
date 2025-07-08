@@ -5,6 +5,9 @@ import model.Task;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 public class TaskService {
 	private List<Task> tasks = new ArrayList<>();
@@ -22,7 +25,21 @@ public class TaskService {
 	public List<Task> getPendingTasks(){
 		return tasks.stream().filter(t -> !t.isCompleted()).collect(Collectors.toList());
 	}
-	
+
+	public boolean serializeTasksToFile(String filename) {
+		try (FileOutputStream fileOut = new FileOutputStream(filename);
+			 BufferedOutputStream bufferOut = new BufferedOutputStream(fileOut);
+			 ObjectOutputStream objectOut = new ObjectOutputStream(bufferOut)) {
+			
+			objectOut.writeObject(tasks);
+			System.out.println("Tasks saved successfully to: " + filename);
+			return true;
+		} catch (Exception e) {
+			System.out.println("Error saving tasks: " + e.getMessage());
+			return false;
+		}
+	}
+
 	public boolean markDone(int id) {
 		Optional<Task> task = tasks.stream()
                 .filter(t -> t.getId() == id)
