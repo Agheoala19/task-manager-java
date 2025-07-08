@@ -10,6 +10,7 @@ An educational Java project that demonstrates the use of multiple programming pa
 - Display all tasks
 - Filter tasks by status (pending/completed)
 - Mark tasks as completed
+- Save tasks to file
 
 ## How to Run
 Run the project using an IDE (Eclipse, IntelliJ etc.)
