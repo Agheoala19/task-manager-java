@@ -1,9 +1,10 @@
 package model;
 
 import java.time.LocalDate;
+import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 
-public class Task {
+public class Task implements Serializable {
 	private int id;
 	private String description;
 	private boolean completed;
