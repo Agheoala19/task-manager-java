@@ -1,6 +1,7 @@
 package ui;
 
 import service.TaskService;
+import model.Task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -22,6 +23,7 @@ public class ConsoleUI {
 					case 2 -> showAllTasks();
 					case 3 -> showPendingTasks();
 					case 4 -> markDone();
+					case 5 -> saveTasks();
 					case 0 -> {
 						System.out.println("Bye!");
 						return;
@@ -36,8 +38,8 @@ public class ConsoleUI {
 	
 	private void showMenu() {
 		System.out.println("\n=== Menu ===");
-        System.out.println("\n1. Add Task\n2. Show All\n3. Show Pending\n4. Mark Done\n0. Exit");
-        System.out.println("Select an option:");
+	        System.out.println("\n1. Add Task\n2. Show All\n3. Show Pending\n4. Mark Done\n5. Save Tasks\n0. Exit");
+	        System.out.println("Select an option:");
     }
 	
 	private void addTask() {
@@ -60,41 +62,52 @@ public class ConsoleUI {
 	
 	private void showAllTasks() {
 		List<Task> tasks = service.getAllTasks();
-        if (tasks.isEmpty()) {
-            System.out.println("\nThere are no tasks!");
-        } else {
-            System.out.println("\n=== All Tasks ===");
-            tasks.forEach(System.out::println);
-        }
+	        if (tasks.isEmpty()) {
+	            System.out.println("\nThere are no tasks!");
+	        } else {
+	            System.out.println("\n=== All Tasks ===");
+	            tasks.forEach(System.out::println);
+	        }
 	}
 	
 	private void showPendingTasks() {
-        List<Task> pendingTasks = service.getPendingTasks();
-        if (pendingTasks.isEmpty()) {
-            System.out.println("\nNo pending tasks!");
-        } else {
-            System.out.println("\n=== Pending Tasks ===");
-            pendingTasks.forEach(System.out::println);
-        }
-    }
+	        List<Task> pendingTasks = service.getPendingTasks();
+	        if (pendingTasks.isEmpty()) {
+	            System.out.println("\nNo pending tasks!");
+	        } else {
+	            System.out.println("\n=== Pending Tasks ===");
+	            pendingTasks.forEach(System.out::println);
+	        }
+    	}
+
+	private void saveTasks() {
+		System.out.println("Enter filename to save tasks (e.g., tasks.ser): ");
+		String filename = scanner.nextLine().trim();
+		if (!filename.isEmpty()) {
+			service.serializeTasksToFile(filename);
+		} else {
+			System.out.println("Filename cannot be empty.");
+		}
+	}
+
 	
 	private void markDone() {
 		List<Task> pendingTasks = service.getPendingTasks();
-        if (pendingTasks.isEmpty()) {
-            System.out.println("\nNo tasks to be completed!");
-            return;
-        }
-
-        System.out.println("\nTasks:");
-        pendingTasks.forEach(System.out::println);
-        System.out.println("\n");
-        
-        try {
-            System.out.print("Pick a task's ID you completed: \n");
-            int id = Integer.parseInt(scanner.nextLine().trim());
-            service.markDone(id);
-        } catch (NumberFormatException e) {
-            System.out.println("Pick a valid number!\n");
-        }
+	        if (pendingTasks.isEmpty()) {
+	            System.out.println("\nNo tasks to be completed!");
+	            return;
+	        }
+	
+	        System.out.println("\nTasks:");
+	        pendingTasks.forEach(System.out::println);
+	        System.out.println("\n");
+	        
+	        try {
+	            System.out.print("Pick a task's ID you completed: \n");
+	            int id = Integer.parseInt(scanner.nextLine().trim());
+	            service.markDone(id);
+	        } catch (NumberFormatException e) {
+	            System.out.println("Pick a valid number!\n");
+	        }
 	}
 }
